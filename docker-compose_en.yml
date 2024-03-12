@@ -1,0 +1,52 @@
+version: '2.3'
+services:
+  allinone:
+    image: ghcr.io/wy580477/leech-aio-app-ex:latest
+    # For lite version without pyLoad, use: ghcr.io/wy580477/leech-aio-app-ex:lite
+    container_name: allinone
+    network_mode: host
+    restart: unless-stopped
+    logging:
+      driver: "journald"
+      options:
+        tag: "{{.Name}}"
+    volumes:
+      - ~/data:/mnt/data
+      # Volume for storing data.
+    environment:
+      GLOBAL_USER: admin
+      # Username for all web services except qBittorret.
+      GLOBAL_PASSWORD: password
+      # Password for all web services except qBittorret, double as Aria2 RPC token. Recommend strong password.
+      GLOBAL_PORTAL_PATH: /portal
+      # Portal page & base URL for all web services. Do not set to blank or '/'.
+      CADDY_DOMAIN: 
+      # For example: "http://example.com" or "https://example.com"
+      # If value is set to a valid domain name (it can be resolved to your host) and port 80/443 is open to internet, caddy's auto-https function can be enabled.
+      # You don't need to buy a domain. Any ddns service domain will work.
+      # For advanced users, you can use Cloudflare api in CADDY_EMAIL env for SSL certificate instead of Email address. This way you don't need 80/443 ports.
+      # If you set value to blank, http service will open to external IP.
+      CADDY_EMAIL: internal
+      # Email address for receiving notification emails from certification authority, you can use fake address.
+      # Set to "{\n dns cloudflare your_cloudflare_api_key \n}", Caddy will use Cloudflare api for SSL certificate.
+      # If set to "internal", caddy will use self-signed cert.
+      CADDY_WEB_PORT: 8080
+      # Port for web services. You enable auto-https from caddy by setting to 443 port.
+      OLIVETIN: Disable
+      # You can execute predefined yt-dlp, gallery-dl & Rclone commands from OliveTin WebUI. Set value to "Enable" to enable OliveTin. 
+      # Attention: User can execute any shell command from OliveTin WebUI, so enable OliveTin at your own risk.
+      RCLONE_DAV: Enable
+      # You can set value to "Disable" to disable Rclone WebDAV server, this will save around 20MB memory.
+      TZ: UTC
+      # Timezone
+
+      # The following envs are list of ports listened on localhost. 
+      # You don't need to change them unless you have port conflict.
+      ARIA2_PORT: 61800
+      FILEBROWSER_PORT: 61801
+      METUBE_PORT: 61802
+      OLIVETIN_PORT: 61803
+      PYLOAD_PORT: 61804
+      QBT_WEBUI_PORT: 61805
+      RCLONE_PORT: 61806
+      RCLONE_WEBDAV_PORT: 61807

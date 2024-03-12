@@ -1,0 +1,17 @@
+#!/bin/sh
+
+exec 2>&1
+
+# Update gallery-dl
+pipx upgrade --pip-args='--no-cache-dir' gallery-dl
+
+mkdir -p /mnt/data/config/olivetin 2>/dev/null
+export HOME=/mnt/data/config
+
+if [ ! -f "/mnt/data/config/olivetin/config.yaml" ]; then
+    mv /workdir/olivetin_config.yaml  /mnt/data/config/olivetin/config.yaml
+fi
+
+sed -i "s|listenAddressSingleHTTPFrontend:.*|listenAddressSingleHTTPFrontend: 127.0.0.1:${OLIVETIN_PORT}|g" /mnt/data/config/olivetin/config.yaml
+
+exec OliveTin --configdir /mnt/data/config/olivetin

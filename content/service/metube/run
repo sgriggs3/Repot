@@ -1,0 +1,19 @@
+#!/bin/sh
+
+exec 2>&1
+
+# Update yt-dlp
+python3 -m pip install --no-cache-dir -U yt-dlp
+
+# Configure & run metube
+if [ ! -f "/mnt/data/config/metube_options.conf" ]; then
+    cp /workdir/metube_options.conf /mnt/data/config/
+fi
+
+source /mnt/data/config/metube_options.conf
+export $(sed '/^#/d' /mnt/data/config/metube_options.conf | cut -d= -f1)
+export HOST=127.0.0.1
+export PORT=${METUBE_PORT}
+cd /app
+
+exec python3 /app/app/main.py

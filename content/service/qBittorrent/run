@@ -1,0 +1,18 @@
+#!/bin/sh
+
+mkdir -p /mnt/data/config/qBittorrent/config 2>/dev/null
+
+if [ ! -f "/mnt/data/config/qBittorrent/config/qBittorrent.conf" ]; then
+    cp /workdir/qbit.conf /mnt/data/config/qBittorrent/config/qBittorrent.conf
+    if [ "${GLOBAL_LANGUAGE}" = "chs" ]; then
+        LANG=zh
+    else
+        LANG=en
+    fi
+    sed -i "s|General.Locale=.*|General\\\Locale=${LANG}|g" /mnt/data/config/qBittorrent/config/qBittorrent.conf
+fi
+
+export QBT_PROFILE=/mnt/data/config
+
+exec 2>&1
+exec qbittorrent-nox
