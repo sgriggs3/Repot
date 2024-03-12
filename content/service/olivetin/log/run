@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mkdir -p /mnt/data/log/olivetin 2>/dev/null
+exec svlogd -tt /mnt/data/log/olivetin

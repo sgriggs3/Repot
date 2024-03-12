@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mkdir -p /mnt/data/log/ttyd 2>/dev/null
+exec svlogd /mnt/data/log/ttyd
