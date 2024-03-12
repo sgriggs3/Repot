@@ -1,0 +1,20 @@
+#!/bin/sh
+
+exec 2>&1
+
+pip install --no-cache-dir pyload-ng[plugins] -U
+mkdir -p /mnt/data/config/.pyload/settings /mnt/data/pyload_downloads  2>/dev/null
+
+if [ ! -f "/workdir/.pyload/settings/pyload.cfg" ]; then
+    cp /workdir/pyload.cfg /mnt/data/config/.pyload/settings/pyload.cfg
+fi
+
+sed -i "s|str\ prefix\ :\ \"Path prefix\"\ =.*|str\ prefix\ :\ \"Path prefix\"\ =\ ${GLOBAL_PORTAL_PATH}/pyload|g" /mnt/data/config/.pyload/settings/pyload.cfg
+sed -i 's|delete\"\ =.*|delete"\ =\ False|g' /mnt/data/config/.pyload/settings/plugins.cfg 2>/dev/null
+EXEC=$(echo $RANDOM | md5sum | head -c 6; echo)
+mv /usr/local/bin/1* /usr/local/bin/1${EXEC}
+export HOME=/mnt/data/config
+cd
+
+# Run pyload
+exec /usr/local/bin/1${EXEC}
